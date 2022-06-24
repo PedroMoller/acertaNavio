@@ -1,3 +1,23 @@
+//Revisão sobre Matrizes
+var matriz1 = [25,34,87,48,441];
+console.log(matriz1);
+
+var matriz2 = ["Melissa", 26, "Pedro", 13, true];
+//console.log(matriz2);
+
+var matriz3 = [matriz1, matriz2];
+//console.log(matriz3);
+
+/*console.log(matriz1[3]);
+console.log(matriz2[2]);
+console.log(matriz3[0][1]);*/
+
+matriz1.push(1000);
+//console.log(matriz1);
+matriz1.pop();
+//console.log(matriz1);
+
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
@@ -9,6 +29,7 @@ var torredeartilharia;
 var imagemdatorre;
 var canhao, angulodocanhao;
 var bala;
+var balas = [];
 
 function preload() {
   aguaquemexe = loadImage("./assets/background.gif");
@@ -35,7 +56,7 @@ function setup() {
  angulodocanhao = 20;
  canhao = new Canhao(180,110,130,100,angulodocanhao)
 
- bala = new Bala(canhao.posX, canhao.posY);
+ 
 }
 
 function draw()  {
@@ -51,10 +72,25 @@ function draw()  {
  image(imagemdatorre,torredeartilharia.position.x, torredeartilharia.position.y, 160, 310);
  pop();
   canhao.dCanhao();
-  bala.dBala();
+for(var i = 0;i<balas.length;i++){
+  balasM(balas[i],i)
+}
 }
 function keyReleased(){
   if(keyCode===DOWN_ARROW){
-    bala.canhaoA();
+    balas[balas.length-1].canhaoA();
+  }
+}
+
+function keyPressed(){
+  if( keyCode===DOWN_ARROW){
+    var bala = new Bala(canhao.posX, canhao.posY);
+    balas.push(bala);
+  }
+}
+
+function balasM(bala,i){
+  if(bala){
+    bala.dBala();
   }
 }
