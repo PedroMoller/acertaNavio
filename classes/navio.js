@@ -19,4 +19,10 @@ class Navio {
         image(this.naviod, 0, this.navioPos, this.lar, this.alt);
         pop();
     }
+    apgNavio(index){
+        setTimeout(()=>{
+            Matter.World.remove(world,navios[index].naviopirata);
+            delete navios[index];
+        },2000);
+    }
 }
