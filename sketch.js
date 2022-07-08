@@ -36,6 +36,8 @@ var naviosAnimation = [];
 var naviosSpritesheet, naviosDados;
 var anavioanimation = [];
 var anavioSpritesheet, anavioDados;
+var balaa = [];
+var balaSpritesheet, balaDados;
 
 function preload() {
   aguaquemexe = loadImage("./assets/background.gif");
@@ -44,6 +46,8 @@ function preload() {
   naviosDados = loadJSON("./assets/boat/boat.json");
   anavioSpritesheet = loadImage("./assets/boat/brokenBoat.png");
   anavioDados = loadJSON("./assets/boat/brokenBoat.json")
+  balaSpritesheet = loadImage("./assets/waterSplash/waterSplash.png");
+  balaDados = loadJSON("./assets/waterSplash/waterSplash.json")
 }
 
 function setup() {
@@ -77,6 +81,12 @@ function setup() {
   var pos = anaviosFrames[i].position;
   var img = anavioSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
   anavioanimation.push(img);
+ }
+ var balaFrames = balaDados.frames;
+ for(var i = 0; i < balaFrames.length; i++){
+  var pos = balaFrames[i].position;
+  var img = balaSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  balaa.push(img);
  }
 }
 
@@ -117,6 +127,7 @@ function keyPressed(){
 function balasM(bala,i){
   if(bala){
     bala.dBala();
+    bala.animBala();
     if(bala.bola.position.x>=width||bala.bola.position.y>=height-50){
       bala.apgbala(i);
     }
