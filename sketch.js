@@ -32,10 +32,18 @@ var bala;
 var balas = [];
 var navio;
 var navios = [];
+var naviosAnimation = [];
+var naviosSpritesheet, naviosDados;
+var anavioanimation = [];
+var anavioSpritesheet, anavioDados;
 
 function preload() {
   aguaquemexe = loadImage("./assets/background.gif");
   imagemdatorre = loadImage("./assets/tower.png");
+  naviosSpritesheet = loadImage("./assets/boat/boat.png");
+  naviosDados = loadJSON("./assets/boat/boat.json");
+  anavioSpritesheet = loadImage("./assets/boat/brokenBoat.png");
+  anavioDados = loadJSON("./assets/boat/brokenBoat.json")
 }
 
 function setup() {
@@ -58,7 +66,18 @@ function setup() {
  angulodocanhao = 20;
  canhao = new Canhao(180,110,130,100,angulodocanhao)
 
-
+ var naviosFrames = naviosDados.frames;
+ for(var i = 0; i < naviosFrames.length; i++){
+  var pos = naviosFrames[i].position;
+  var img = naviosSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  naviosAnimation.push(img);
+ }
+ var anaviosFrames = anavioDados.frames;
+ for(var i = 0; i < anaviosFrames.length; i++){
+  var pos = anaviosFrames[i].position;
+  var img = anavioSpritesheet.get(pos.x, pos.y, pos.w, pos.h);
+  anavioanimation.push(img);
+ }
 }
 
 function draw()  {
@@ -109,18 +128,19 @@ function naviosM(){
     if(navios[navios.length-1]===undefined||navios[navios.length-1].naviopirata.position.x<width-300){
       var position = [-40,-60,-70,-20];
       var position2 = random(position);
-      var  navio = new Navio(width, height-60, 170, 170, position2); 
+      var  navio = new Navio(width, height-60, 170, 170, position2, naviosAnimation); 
       navios.push(navio);
     }
     for(var i =0;i<navios.length;i++){
       if(navios[i]){
         Matter.Body.setVelocity(navios[i].naviopirata, {x:-0.9, y:0});
         navios[i].dNavio();
+        navios[i].animNavio();
       }
     }
   }
   else{
-  var  navio = new Navio(width, height-60, 170, 170, -60); 
+  var  navio = new Navio(width, height-60, 170, 170, -60, naviosAnimation); 
   navios.push(navio);
   }
 }
