@@ -107,7 +107,7 @@ function draw()  {
   }
   textSize(40);
   fill("darkBlue");
-  text("Pontuação:"+pontuacao,900,50);
+  text("Pontuação:"+pontuacao,800,50);
 
   Engine.update(engine);
  
