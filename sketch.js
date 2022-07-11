@@ -38,6 +38,10 @@ var anavioanimation = [];
 var anavioSpritesheet, anavioDados;
 var balaa = [];
 var balaSpritesheet, balaDados;
+var detectgameover = false;
+var musicfundo,musicexplosion,musicgameover,musicagua;
+var piratar = false;
+var pontuacao = 0;
 
 function preload() {
   aguaquemexe = loadImage("./assets/background.gif");
@@ -48,6 +52,10 @@ function preload() {
   anavioDados = loadJSON("./assets/boat/brokenBoat.json")
   balaSpritesheet = loadImage("./assets/waterSplash/waterSplash.png");
   balaDados = loadJSON("./assets/waterSplash/waterSplash.json")
+  musicfundo = loadSound("./assets/background_music.mp3");
+  musicexplosion = loadSound("./assets/cannon_explosion.mp3");
+  musicgameover= loadSound("./assets/pirate_laugh.mp3");
+  musicagua = loadSound("./assets/cannon_water.mp3");
 }
 
 function setup() {
@@ -93,6 +101,13 @@ function setup() {
 function draw()  {
   background(189);
   image(aguaquemexe, 0, 0, 1200, 600);
+  if(!musicfundo.isPlaying()){
+    musicfundo.play();
+    musicfundo.setVolume(0.1);
+  }
+  textSize(40);
+  fill("darkBlue");
+  text("Pontuação:"+pontuacao,900,50);
 
   Engine.update(engine);
  
@@ -113,6 +128,8 @@ for(var i = 0;i<balas.length;i++){
 }
 function keyReleased(){
   if(keyCode===DOWN_ARROW){
+    musicexplosion.play();
+    musicexplosion.setVolume(0.2)
     balas[balas.length-1].canhaoA();
   }
 }
@@ -130,6 +147,11 @@ function balasM(bala,i){
     bala.animBala();
     if(bala.bola.position.x>=width||bala.bola.position.y>=height-50){
       bala.apgbala(i);
+      if(bala.balaafun===true){
+        musicagua.playMode("untilDone");
+        musicagua.play();
+        musicagua.setVolume(0.2);
+      }
     }
   }
 }
@@ -147,6 +169,15 @@ function naviosM(){
         Matter.Body.setVelocity(navios[i].naviopirata, {x:-0.9, y:0});
         navios[i].dNavio();
         navios[i].animNavio();
+        var colisao = Matter.SAT.collides(torredeartilharia, navios[i].naviopirata);
+        if(colisao.collided && !navios[i].navioq){
+          if(!piratar&&!musicgameover.isPlaying()){
+            musicgameover.play();
+            piratar = true;
+          }
+          detectgameover = true;
+          gameover();
+        }
       }
     }
   }
@@ -161,10 +192,27 @@ function colisaoBalaN(index){
     if(balas[index]!==undefined&&navios[i]!==undefined){
       var colisao = Matter.SAT.collides(balas[index].bola,navios[i].naviopirata);
       if(colisao.collided){
+        pontuacao += 5
         navios[i].apgNavio(i);
         Matter.World.remove(world,balas[index].bola);
         delete balas[index];
       }
     }
   }
+}
+
+function gameover(){
+  swal({
+    title: "Game Over!",
+    text: "Obrigado por jogar!",
+    imageUrl: "https://raw.githubusercontent.com/whitehatjr/PiratesInvasion/main/assets/boat.png",
+    imageSize: "150x150",
+    confirmButtonText: "Jogar novamente"
+  },
+  function(botaoPressionado){
+    if(botaoPressionado){
+      location.reload();
+    }
+  }
+  )
 }
